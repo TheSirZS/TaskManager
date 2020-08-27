@@ -1,3 +1,5 @@
+import { Firebase } from "../../config/firebase"
+
 export const ADD_TASK = (task) => {
   return {
     type: 'ADD_TASK',
@@ -5,16 +7,23 @@ export const ADD_TASK = (task) => {
   }
 }
 
-export const SHOW_MODAL = (active) => {
+export const GET_USER = () => (dispatch) => {
+  dispatch(ENTER_REQUEST());
+  Firebase.checkAuthUser((user) => {
+    if (user) dispatch(SET_USER(user))
+    else dispatch(SET_USER(null))
+  });
+}
+
+export const SET_USER = (user) => {
   return {
-    type: 'SHOW_MODAL',
-    payload: active
+    type: 'SET_USER',
+    payload: user
   }
 }
 
-export const HIDE_MODAL = (active) => {
+const ENTER_REQUEST = () => {
   return {
-    type: 'HIDE_MODAL',
-    payload: active
+    type: 'ENTER_REQUEST'
   }
 }

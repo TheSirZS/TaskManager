@@ -6,7 +6,7 @@ import { Countdown } from "./countdown.component";
 import { FormActions } from "../actions/form-actions.component";
 import { ModalContext } from "../../helpers/contexts.helper";
 
-export const Form = ({ addTask }) => {
+export const Form = ({ addTask, showAlert }) => {
 
   const { setModal, show } = useContext(ModalContext);
 
@@ -16,19 +16,19 @@ export const Form = ({ addTask }) => {
   const [counter, setCounter] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [formState, setFormState, reset] = useForm({
     task: "",
-    time: "00:00:00",
+    time: "00:30:00",
   });
 
   const startTracking = (e) => {
     e.preventDefault();
     const { task, time } = formState;
     if (task.toString().length >= 5 && time.toString()) {
-      setPaused(false)
+      resetCounter();
       let hours = time.split(':')[0], minutes = time.split(':')[1], seconds = time.split(':')[2].split(' ')[0];
       setCounter({
         hours: parseInt(hours), minutes: parseInt(minutes), seconds: parseInt(seconds)
       })
-      setTracking(!tracking);
+      setTracking(true);
     }
   };
 
@@ -40,7 +40,7 @@ export const Form = ({ addTask }) => {
   };
 
   const finishTracking = () => {
-    setTracking(!tracking);
+    setTracking(false);
     const { task, time } = formState;
     let newTask = {
       task: task,
@@ -49,6 +49,7 @@ export const Form = ({ addTask }) => {
     };
     addTask(newTask);
     reset();
+    showAlert('New task generated successfully')
   }
 
   const resetCounter = () => {
@@ -65,7 +66,7 @@ export const Form = ({ addTask }) => {
 
   return (
     <form
-      className={"card bg-secondary p-2 animate__slideInRight"}
+      className={"card bg-secondary p-2 animate__animated animate__slideInRight"}
       onSubmit={(e) => (!tracking ? startTracking(e) : stopTracking(e))}
     >
       <div className={"row justify-content-between"}>
@@ -107,6 +108,7 @@ export const Form = ({ addTask }) => {
           paused={paused}
           over={over}
           setOver={setOver}
+          finishTracking={finishTracking}
         />
       )}
     </form>
