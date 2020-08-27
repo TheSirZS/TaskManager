@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { useForm } from "../../hooks/use.form.hook";
 
 import { Countdown } from "./countdown.component";
 import { FormActions } from "../actions/form-actions.component";
+import { ModalContext } from "../../helpers/contexts.helper";
 
 export const Form = ({ addTask }) => {
+
+  const { setModal, show } = useContext(ModalContext);
+
   const [tracking, setTracking] = useState(false);
   const [paused, setPaused] = useState(false);
   const [over, setOver] = useState(false);
-  const [counter, setCounter] = useState({
-    hours: parseInt(0),
-    minutes: parseInt(0),
-    seconds: parseInt(0)
-  });
+  const [counter, setCounter] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [formState, setFormState, reset] = useForm({
     task: "",
     time: "00:00:00",
@@ -23,6 +23,7 @@ export const Form = ({ addTask }) => {
     e.preventDefault();
     const { task, time } = formState;
     if (task.toString().length >= 5 && time.toString()) {
+      setPaused(false)
       let hours = time.split(':')[0], minutes = time.split(':')[1], seconds = time.split(':')[2].split(' ')[0];
       setCounter({
         hours: parseInt(hours), minutes: parseInt(minutes), seconds: parseInt(seconds)
@@ -31,8 +32,14 @@ export const Form = ({ addTask }) => {
     }
   };
 
-  const finishTracking = (e) => {
+  const stopTracking = (e) => {
     e.preventDefault();
+    setPaused(true);
+    show();
+    setModal((prev) => ({ ...prev, sucess: finishTracking, cancel: () => setPaused(false)}))
+  };
+
+  const finishTracking = () => {
     setTracking(!tracking);
     const { task, time } = formState;
     let newTask = {
@@ -42,7 +49,7 @@ export const Form = ({ addTask }) => {
     };
     addTask(newTask);
     reset();
-  };
+  }
 
   const resetCounter = () => {
     const { time } = formState;
@@ -58,8 +65,8 @@ export const Form = ({ addTask }) => {
 
   return (
     <form
-      className={"card bg-secondary p-2"}
-      onSubmit={(e) => (!tracking ? startTracking(e) : finishTracking(e))}
+      className={"card bg-secondary p-2 animate__slideInRight"}
+      onSubmit={(e) => (!tracking ? startTracking(e) : stopTracking(e))}
     >
       <div className={"row justify-content-between"}>
         <div className={"col-9"}>
@@ -76,6 +83,7 @@ export const Form = ({ addTask }) => {
                     placeholder={i === 0 ? "What are you working today?" : ""}
                     autoComplete={"off"}
                     max={i === 1 ? '02:00:00' : ''}
+                    readOnly={tracking}
                   />
                 </div>
               </div>

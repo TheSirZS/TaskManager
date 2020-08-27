@@ -9,7 +9,7 @@ import { List } from "../components/tracker/list.component";
 
 const mapStateToProps = (state) => {
   return {
-    tasks: state.state.tasks,
+    tasks: state.state.tasks
   };
 };
 
@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addTask: (task) => {
       dispatch(ADD_TASK(task));
-    },
+    }
   };
 };
 
@@ -27,7 +27,7 @@ export const TrackerScreen = connect(
 )((props) => {
   const { tasks, addTask } = props;
   return (
-    <div className={"container-xl mt-5"}>
+    <div className={"container-xl mt-5 vh-100"}>
       <h1 className={"text-light"}>Tracker Screen</h1>
       <div className={"row"}>
         <div className={"col"}>

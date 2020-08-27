@@ -7,7 +7,7 @@ export const LoginScreen = ({ history }) => {
   }
 
   return (
-    <div className={"container-xl"}>
+    <div className={"container-xl vh-100"}>
       <h1 className={"text-light"}>Login Screen</h1>
       <hr className={"bg-light"} />
       <div className={"mt-4"}>
