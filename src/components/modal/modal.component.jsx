@@ -1,15 +1,16 @@
 import React from "react";
+import { SVGCancel } from "../svg/svg.component";
 
-export const Modal = ({show, sucess, cancel}) => {
+export const Modal = ({ show, title, body, sucess, cancel }) => {
   return (
     <div
-      className="modal-layout animate__zoomIn"
+      className="modal-layout"
     >
-      <div className="modal-dialog">
+      <div className="modal-dialog animate__animated animate__zoomIn">
         <div className="modal-content bg-secondary">
           <div className="modal-header">
             <h5 className="modal-title text-light">
-              Complete Task
+              {title}
             </h5>
             <button
               type="button"
@@ -19,10 +20,10 @@ export const Modal = ({show, sucess, cancel}) => {
                 show()
               }}
             >
-              <span aria-hidden="true">&times;</span>
+              <SVGCancel color={"#FFF"} />
             </button>
           </div>
-          <div className="modal-body text-light">{"Do you want to finish this task?"}</div>
+          <div className="modal-body text-light">{body}</div>
           <div className="modal-footer">
             <button
               type="button"

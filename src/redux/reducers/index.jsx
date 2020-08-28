@@ -9,22 +9,26 @@ export const state = (state = initialState, { type, payload }) => {
     case "ENTER_REQUEST":
       return {
         ...state,
-        loading: true
-      }
-    case "ADD_TASK":
+        loading: true,
+      };
+    case "FINISH_REQUEST":
       return {
         ...state,
-        loading: false,
-        tasks: [...state.tasks, payload],
+        loading: false
       };
     case "SET_USER":
       return {
         ...state,
         loading: false,
-        user: payload
+        user: payload,
+      };
+    case "SET_TASKS":
+      return {
+        ...state,
+        loading: false,
+        tasks: payload,
       }
     default:
       return state;
   }
 };
-

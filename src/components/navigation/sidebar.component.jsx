@@ -10,8 +10,8 @@ export const Sidebar = ({ routes }) => {
           {routes.map((route, i) => (
             <NavLink
               key={i}
-              activeClassName="text-light"
-              className={"nav-item nav-link"}
+              activeClassName="bg-dark text-light rounded"
+              className={"nav-item nav-link text-light"}
               exact
               to={route.pathname}
             >{route.name}</NavLink>

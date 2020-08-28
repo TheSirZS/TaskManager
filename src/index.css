@@ -10,6 +10,10 @@ p {
   margin-bottom: 0;
 }
 
+span {
+  font-size: 12px;
+}
+
 .modal-layout {
   background-color: rgba(0, 0, 0, 0.5);
   bottom: 0;

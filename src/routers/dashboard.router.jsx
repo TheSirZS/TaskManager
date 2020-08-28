@@ -13,6 +13,8 @@ export const DashboardRouter = () => {
 
   const [modal, setModal] = useState({
     active: false,
+    title: '',
+    body: '',
     sucess: () => {},
     cancel: () => {}
   })
@@ -24,6 +26,8 @@ export const DashboardRouter = () => {
       {modal.active && (
         <Modal 
           show={show}
+          title={modal.title}
+          body={modal.body}
           sucess={modal.sucess}
           cancel={modal.cancel}
         />

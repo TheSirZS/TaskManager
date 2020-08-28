@@ -4,10 +4,10 @@ import { useForm } from "../../hooks/use.form.hook";
 
 import { Countdown } from "./countdown.component";
 import { FormActions } from "../actions/form-actions.component";
+
 import { ModalContext } from "../../helpers/contexts.helper";
 
-export const Form = ({ addTask, showAlert }) => {
-
+export const Form = ({ user, addTask, showAlert }) => {
   const { setModal, show } = useContext(ModalContext);
 
   const [tracking, setTracking] = useState(false);
@@ -24,10 +24,14 @@ export const Form = ({ addTask, showAlert }) => {
     const { task, time } = formState;
     if (task.toString().length >= 5 && time.toString()) {
       resetCounter();
-      let hours = time.split(':')[0], minutes = time.split(':')[1], seconds = time.split(':')[2].split(' ')[0];
+      let hours = time.split(":")[0],
+        minutes = time.split(":")[1],
+        seconds = time.split(":")[2].split(" ")[0];
       setCounter({
-        hours: parseInt(hours), minutes: parseInt(minutes), seconds: parseInt(seconds)
-      })
+        hours: parseInt(hours),
+        minutes: parseInt(minutes),
+        seconds: parseInt(seconds),
+      });
       setTracking(true);
     }
   };
@@ -36,29 +40,44 @@ export const Form = ({ addTask, showAlert }) => {
     e.preventDefault();
     setPaused(true);
     show();
-    setModal((prev) => ({ ...prev, sucess: finishTracking, cancel: () => setPaused(false)}))
+    setModal((prev) => ({
+      ...prev,
+      title: "Complete Task",
+      body: "Do you want to finish this task?",
+      sucess: finishTracking,
+      cancel: () => setPaused(false),
+    }));
   };
 
   const finishTracking = () => {
     setTracking(false);
     const { task, time } = formState;
+    let formatTime = `${counter.hours
+      .toString()
+      .padStart(2, "0")}:${counter.minutes
+      .toString()
+      .padStart(2, "0")}:${counter.seconds.toString().padStart(2, "0")}`;
     let newTask = {
+      userId: user.uid,
       task: task,
-      time: time,
+      startedTime: time,
+      currentTime: formatTime,
       createdAt: Date.now(),
     };
     addTask(newTask);
     reset();
-    showAlert('New task generated successfully')
-  }
+    showAlert("New task generated successfully");
+  };
 
   const resetCounter = () => {
     const { time } = formState;
-    let hours = time.split(':')[0], minutes = time.split(':')[1], seconds = time.split(':')[2].split(' ')[0];
+    let hours = time.split(":")[0],
+      minutes = time.split(":")[1],
+      seconds = time.split(":")[2].split(" ")[0];
     setCounter({
       hours: parseInt(hours),
       minutes: parseInt(minutes),
-      seconds: parseInt(seconds)
+      seconds: parseInt(seconds),
     });
     setPaused(false);
     setOver(false);
@@ -66,7 +85,9 @@ export const Form = ({ addTask, showAlert }) => {
 
   return (
     <form
-      className={"card bg-secondary p-2 animate__animated animate__slideInRight"}
+      className={
+        "card bg-secondary p-2 animate__animated animate__slideInRight"
+      }
       onSubmit={(e) => (!tracking ? startTracking(e) : stopTracking(e))}
     >
       <div className={"row justify-content-between"}>
@@ -83,7 +104,7 @@ export const Form = ({ addTask, showAlert }) => {
                     className={"form-control"}
                     placeholder={i === 0 ? "What are you working today?" : ""}
                     autoComplete={"off"}
-                    max={i === 1 ? '02:00:00' : ''}
+                    max={i === 1 ? "02:00:00" : ""}
                     readOnly={tracking}
                   />
                 </div>
@@ -92,19 +113,19 @@ export const Form = ({ addTask, showAlert }) => {
           </div>
         </div>
         <div className={"col-3"}>
-          <FormActions 
-            tracking={tracking} 
-            resetCounter={resetCounter} 
+          <FormActions
+            tracking={tracking}
+            resetCounter={resetCounter}
             paused={paused}
-            setPaused={setPaused} 
+            setPaused={setPaused}
           />
         </div>
       </div>
       {tracking && (
-        <Countdown 
-          task={formState.task} 
-          counter={counter} 
-          setCounter={setCounter} 
+        <Countdown
+          task={formState.task}
+          counter={counter}
+          setCounter={setCounter}
           paused={paused}
           over={over}
           setOver={setOver}
